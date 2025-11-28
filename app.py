@@ -15,9 +15,9 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # Set tesseract_cmd path if needed (Windows)
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-SPOTIPY_CLIENT_ID = '7952a59e4b8c491c99abb40ea8945f39'
-SPOTIPY_CLIENT_SECRET = '656897f8d40b42bd805addda8efc8b35'
-SPOTIPY_REDIRECT_URI = 'https://ddc6-2401-4900-883f-4e39-fc15-14c7-e1fc-4384.ngrok-free.app/callback'
+SPOTIPY_CLIENT_ID = 'Client id'
+SPOTIPY_CLIENT_SECRET = 'Client secret value'
+SPOTIPY_REDIRECT_URI = 'Ngrok link here for redirection'
 SCOPE = 'playlist-modify-public playlist-modify-private'
 
 def preprocess_image(image_path):
