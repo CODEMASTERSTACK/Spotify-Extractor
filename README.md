@@ -1,6 +1,7 @@
 <div align="center">
 
-# ![Logo](https://i.ibb.co/Xf75KzDg/Chat-GPT-Image-Nov-28-2025-06-23-59-PM.png) Spotify Playlist Extractor
+![Logo](https://i.ibb.co/Xf75KzDg/Chat-GPT-Image-Nov-28-2025-06-23-59-PM.png) 
+# Spotify Playlist Extractor
 
 ### Extract songs from screenshots and create Spotify playlists automatically
 
