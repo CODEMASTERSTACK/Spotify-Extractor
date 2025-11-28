@@ -96,21 +96,6 @@ Perfect for:
 
 ---
 
-## 🎬 Demo
-
-### Upload Screenshots
-![Upload Interface](https://via.placeholder.com/800x400?text=Upload+Screenshot+Interface)
-
-### Review Detected Songs
-![Songs Review](https://via.placeholder.com/800x400?text=Detected+Songs+Review)
-
-### Create Your Playlist
-![Playlist Created](https://via.placeholder.com/800x400?text=Playlist+Successfully+Created)
-
-> **Note**: Replace placeholder images with actual screenshots of your application
-
----
-
 ## 🏗️ Architecture
 
 ```mermaid
@@ -181,7 +166,7 @@ sudo apt-get install tesseract-ocr
 ### Step 2: Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/spotify-playlist-extractor.git
+git clone https://github.com/CODEMASTERSTACK/Spotify-Extractor.git
 cd spotify-playlist-extractor
 ```
 
@@ -606,7 +591,7 @@ black app.py
 
 ### Reporting Issues
 
-Please use the [Issue Tracker](https://github.com/yourusername/spotify-playlist-extractor/issues) and include:
+Please use the [Issue Tracker](https://github.com/CODEMASTERSTACK/Spotify-Extractor/issues) and include:
 - Detailed description of the issue
 - Steps to reproduce
 - Expected vs actual behavior
@@ -675,19 +660,15 @@ SOFTWARE.
 - **[Flask](https://flask.palletsprojects.com/)** - Micro web framework
 - **[Pillow](https://python-pillow.org/)** - Python Imaging Library
 - **[ngrok](https://ngrok.com/)** - Secure tunneling solution
-- **Spotify** - For providing an amazing API
-- **Contributors** - Thank you to all who have contributed!
-
 ---
 
 ## 📞 Contact
 
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-- Twitter: [@yourhandle](https://twitter.com/yourhandle)
+**Kripal SIngh**
+- GitHub: [@CODEMASTERSTACK](https://github.com/CODEMASTERSTACK)
+- Email: leosen.krish@gmail.com
 
-**Project Link:** [https://github.com/yourusername/spotify-playlist-extractor](https://github.com/yourusername/spotify-playlist-extractor)
+**Project Link:** [https://github.com/CODEMASTERSTACK/spotify-Extractor](https://github.com/CODEMASTERSTACK/Spotify-Extractor)
 
 ---
 
@@ -697,6 +678,6 @@ SOFTWARE.
 
 Made with ❤️ and 🎵
 
-[Back to Top](#-spotify-playlist-extractor)
+[Back to Top](#-spotify-Extractor)
 
 </div>
