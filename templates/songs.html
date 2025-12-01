@@ -1,439 +1,280 @@
 <!doctype html>
 <html>
+
 <head>
-    <title>Extracted Songs</title>
+    <title>Extracted Songs - Spotify Playlist Extractor</title>
+    <link rel="stylesheet" href="static/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            background: #181818;
-            color: #fff;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 700px;
-            margin: 40px auto 0 auto;
-            background: #232323;
-            border-radius: 18px;
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25);
-            padding: 32px 28px 28px 28px;
-        }
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 18px;
-            letter-spacing: -1px;
-            color: #1db954;
-        }
-        .stats {
-            background: #222;
-            padding: 18px 20px;
-            border-radius: 10px;
-            margin-bottom: 28px;
-            color: #b3b3b3;
-            font-size: 1rem;
-        }
-        .search-container {
-            margin-bottom: 28px;
-        }
-        #search-form {
-            display: flex;
-            gap: 10px;
-        }
-        #search-query {
-            flex: 1;
-            padding: 10px 14px;
-            border-radius: 20px;
-            border: none;
-            background: #2a2a2a;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: background 0.2s;
-        }
-        #search-query:focus {
-            background: #333;
-        }
-        .btn {
-            background: #1db954;
-            color: #fff;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: background 0.2s;
-        }
-        .btn:hover, .add-btn:hover, .add-all-btn:hover {
-            background: #1ed760;
-        }
-        .add-all-btn {
-            display: block;
-            width: 100%;
-            margin-bottom: 18px;
-            background: #1db954;
-            color: #fff;
-            border: none;
-            padding: 14px 0;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: background 0.2s;
-        }
-        .add-all-btn:disabled {
-            background: #444;
-            color: #aaa;
-            cursor: not-allowed;
-        }
-        .song-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .song-item {
-            display: flex;
-            align-items: center;
-            margin: 0 0 14px 0;
-            padding: 12px 14px;
-            background: #242424;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
-            transition: background 0.2s;
-        }
-        .song-item:hover {
-            background: #292929;
-        }
-        .song-image {
-            width: 56px;
-            height: 56px;
-            margin-right: 18px;
-            border-radius: 6px;
-            object-fit: cover;
-            background: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: #888;
-        }
-        .song-info {
-            flex-grow: 1;
-        }
-        .song-name {
-            font-weight: 600;
-            font-size: 1.08rem;
-            color: #fff;
-        }
-        .song-artist {
-            color: #b3b3b3;
-            margin-top: 4px;
-            font-size: 0.97rem;
-        }
-        .add-btn {
-            background: #1db954;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 18px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            margin-left: 18px;
-            transition: background 0.2s;
-        }
-        .add-btn:disabled {
-            background: #444;
-            color: #aaa;
-            cursor: not-allowed;
-        }
-        .search-results {
-            margin-top: 12px;
-            border: 1px solid #333;
-            border-radius: 8px;
-            background: #232323;
-            max-height: 320px;
-            overflow-y: auto;
-            box-shadow: 0 4px 16px 0 rgba(0,0,0,0.18);
-        }
-        .search-result-item {
-            padding: 12px 16px;
-            border-bottom: 1px solid #292929;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            transition: background 0.15s;
-        }
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
-        .search-result-item:hover {
-            background: #262626;
-        }
-        .not-found {
-            color: #b3b3b3;
-            font-style: italic;
-            margin-top: 28px;
-            background: #232323;
-            border-radius: 8px;
-            padding: 16px 20px;
-        }
-        .not-found h3 {
-            color: #fff;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        a {
-            color: #1db954;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        hr {
-            border: none;
-            border-top: 1px solid #333;
-            margin: 32px 0 18px 0;
-        }
-        .preview-btn {
-            background: #333;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 18px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            margin-left: 10px;
-            margin-right: 10px;
-            transition: background 0.2s;
-        }
-        .preview-btn:hover:enabled {
-            background: #1db954;
-            color: #fff;
-        }
-        @media (max-width: 800px) {
-            .container { max-width: 98vw; padding: 12px 4vw 18px 4vw; }
-            .song-item { flex-direction: column; align-items: flex-start; }
-            .song-image { margin-bottom: 10px; }
-            .add-btn { margin-left: 0; margin-top: 10px; }
-        }
-    </style>
+  <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
         function addSong(trackUri, trackName, btn) {
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
             fetch('/add_song', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `track_uri=${encodeURIComponent(trackUri)}&track_name=${encodeURIComponent(trackName)}`
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    if (btn) {
-                        btn.disabled = true;
-                        btn.innerText = "Added!";
-                        btn.style.background = "#28a745";
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.innerHTML = '<i class="fas fa-check"></i> Added';
+                        btn.style.background = "#1ed760";
+                        btn.style.color = "#000";
+                    } else {
+                        alert(data.message);
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
                     }
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error adding song');
-            });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error adding song');
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                });
         }
 
         function addAllSongs() {
             const btn = document.getElementById('addAllBtn');
+            const originalText = btn.innerHTML;
             btn.disabled = true;
-            btn.innerText = "Adding...";
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding all songs...';
 
             fetch('/add_all', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    btn.innerText = "All Added!";
-                    btn.style.background = "#28a745";
-                    document.querySelectorAll('.add-btn').forEach(button => {
-                        button.disabled = true;
-                        button.innerText = "Added!";
-                        button.style.background = "#28a745";
-                    });
-                } else {
-                    alert(data.message);
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.innerHTML = '<i class="fas fa-check-circle"></i> All Songs Added Successfully!';
+                        btn.style.background = "#1ed760";
+                        btn.style.color = "#000";
+
+                        // Update all individual buttons
+                        document.querySelectorAll('.add-btn').forEach(button => {
+                            button.disabled = true;
+                            button.innerHTML = '<i class="fas fa-check"></i> Added';
+                            button.style.background = "transparent";
+                            button.style.color = "#1ed760";
+                            button.style.border = "1px solid #1ed760";
+                        });
+                    } else {
+                        alert(data.message);
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error adding songs');
                     btn.disabled = false;
-                    btn.innerText = "Add All to Playlist";
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error adding songs');
-                btn.disabled = false;
-                btn.innerText = "Add All to Playlist";
-            });
+                    btn.innerHTML = originalText;
+                });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Real-time search
+        document.addEventListener('DOMContentLoaded', function () {
+            // Real-time search logic
             let searchTimeout = null;
             const searchInput = document.getElementById('search-query');
             const resultsContainer = document.getElementById('search-results');
 
-            searchInput.addEventListener('input', function() {
+            searchInput.addEventListener('input', function () {
                 clearTimeout(searchTimeout);
                 const query = searchInput.value.trim();
+
                 if (!query) {
                     resultsContainer.innerHTML = '';
+                    resultsContainer.style.display = 'none';
                     return;
                 }
+
                 searchTimeout = setTimeout(() => {
                     fetch('/search_songs', {
                         method: 'POST',
-                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: `query=${encodeURIComponent(query)}`
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        resultsContainer.innerHTML = '';
-                        if (data.success && data.songs && data.songs.length > 0) {
-                            data.songs.forEach(song => {
-                                const div = document.createElement('div');
-                                div.className = 'search-result-item';
-                                div.innerHTML = `
-                                    <img src="${song.image}" style="width:40px;height:40px;border-radius:4px;margin-right:14px;">
-                                    <div style="flex:1;">
-                                        <div style="font-weight:600;color:#fff;">${song.name}</div>
-                                        <div style="font-size:13px;color:#b3b3b3;">${song.artist}</div>
+                        .then(response => response.json())
+                        .then(data => {
+                            resultsContainer.innerHTML = '';
+                            resultsContainer.style.display = 'block';
+
+                            if (data.success && data.songs && data.songs.length > 0) {
+                                data.songs.forEach(song => {
+                                    const div = document.createElement('div');
+                                    div.className = 'song-item';
+                                    div.style.background = '#2a2a2a';
+                                    div.innerHTML = `
+                                    <img src="${song.image}" class="song-image">
+                                    <div class="song-info">
+                                        <div class="song-name">${song.name}</div>
+                                        <div class="song-artist">${song.artist}</div>
                                     </div>
-                                    ${
-                                        song.preview_url
-                                        ? `<button class="btn btn-secondary preview-btn" style="margin-left:10px;" onclick="playPreview('${song.preview_url}', this)">▶ Preview</button>`
-                                        : `<button class="btn btn-secondary preview-btn" style="margin-left:10px;opacity:0.5;" disabled title="No preview available">▶ No Preview</button>`
-                                    }
-                                    <button class="add-btn" style="margin-left:10px;" onclick="addSong('${song.uri}', '${song.name.replace(/'/g, "\\'")}', this)">Add</button>
+                                    <div class="song-actions">
+                                        ${song.preview_url ?
+                                            `<button class="btn btn-outline btn-sm" onclick="playPreview('${song.preview_url}', this)"><i class="fas fa-play"></i></button>` :
+                                            `<button class="btn btn-outline btn-sm" disabled style="opacity:0.3"><i class="fas fa-play-slash"></i></button>`
+                                        }
+                                        <button class="btn btn-primary btn-sm add-btn" onclick="addSong('${song.uri}', '${song.name.replace(/'/g, "\\'")}', this)">Add</button>
+                                    </div>
                                 `;
-                                resultsContainer.appendChild(div);
-                            });
-                        } else {
-                            resultsContainer.innerText = 'No results found';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        resultsContainer.innerText = 'Error searching for songs';
-                    });
-                }, 400); // debounce
+                                    resultsContainer.appendChild(div);
+                                });
+                            } else {
+                                resultsContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: #b3b3b3;">No results found</div>';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            resultsContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: #ff5555;">Error searching</div>';
+                        });
+                }, 400);
             });
 
-            // Prevent form submit from reloading the page
-            document.getElementById('search-form').addEventListener('submit', function(e) {
+            document.getElementById('search-form').addEventListener('submit', function (e) {
                 e.preventDefault();
             });
         });
 
         // Preview logic
         let currentPreviewBtn = null;
+        const player = new Audio();
+
         function playPreview(url, btn) {
-            const player = document.getElementById('preview-player');
             if (player.src !== url) {
                 player.src = url;
             }
+
             if (player.paused || player.src !== url) {
-                player.play();
+                // Stop previous button animation
                 if (currentPreviewBtn) {
-                    currentPreviewBtn.innerText = "▶ Preview";
+                    currentPreviewBtn.innerHTML = '<i class="fas fa-play"></i>';
                 }
-                btn.innerText = "⏸ Pause";
+
+                player.play();
+                btn.innerHTML = '<i class="fas fa-pause"></i>';
                 currentPreviewBtn = btn;
             } else {
                 player.pause();
-                btn.innerText = "▶ Preview";
+                btn.innerHTML = '<i class="fas fa-play"></i>';
             }
-            player.onended = function() {
-                if (currentPreviewBtn) currentPreviewBtn.innerText = "▶ Preview";
+
+            player.onended = function () {
+                if (currentPreviewBtn) currentPreviewBtn.innerHTML = '<i class="fas fa-play"></i>';
             };
         }
     </script>
 </head>
+
 <body>
     <div class="container">
-        <h1>Extracted Songs</h1>
-        
-        <div class="stats">
-            <strong>Extraction Results:</strong><br>
-            Total patterns found: {{ total_extracted }}<br>
-            Successfully matched on Spotify: {{ songs|length }}<br>
-            {% if not_found %}
-            Not found on Spotify: {{ not_found|length }}
-            {% endif %}
-        </div>
-
-        <div class="search-container">
-            <form id="search-form" autocomplete="off">
-                <input type="text" id="search-query" placeholder="Search for any song or artist..." required>
-                <button class="btn" type="submit">Search</button>
-            </form>
-            <div id="search-results" class="search-results"></div>
-        </div>
-
-        {% if songs %}
-        <button id="addAllBtn" class="add-all-btn" onclick="addAllSongs()">
-            Add All to Playlist ({{ songs|length }} songs)
-        </button>
-
-        <ul class="song-list">
-        {% for song in songs %}
-        <li class="song-item">
-            {% if song.image %}
-            <img src="{{ song.image }}" class="song-image" alt="Album cover">
-            {% else %}
-            <div class="song-image">♪</div>
-            {% endif %}
-            <div class="song-info">
-                <div class="song-name">{{ song.name }}</div>
-                <div class="song-artist">{{ song.artist }}</div>
+        <div class="glass-card" style="padding-top: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1>Extracted Songs</h1>
+                <a href="/" class="btn btn-outline btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
             </div>
-            {% if song.preview_url %}
-            <button class="btn btn-secondary preview-btn" onclick="playPreview('{{ song.preview_url }}', this)">
-                ▶ Preview
-            </button>
-            {% else %}
-            <button class="btn btn-secondary preview-btn" disabled title="No preview available" style="opacity:0.5;">
-                ▶ No Preview
-            </button>
-            {% endif %}
-            <button class="add-btn" onclick="addSong('{{ song.uri }}', '{{ song.name }}', this)">
-                Add
-            </button>
-        </li>
-        {% endfor %}
-        </ul>
-        {% else %}
-        <p>No songs were successfully matched on Spotify.</p>
-        {% endif %}
 
-        {% if not_found %}
-        <div class="not-found">
-            <h3>Songs not found on Spotify:</h3>
-            <ul>
-            {% for song, artist in not_found %}
-                <li>{{ song }}{% if artist %} - {{ artist }}{% endif %}</li>
-            {% endfor %}
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <h3>{{ total_extracted }}</h3>
+                    <p>Found</p>
+                </div>
+                <div class="stat-item">
+                    <h3>{{ songs|length }}</h3>
+                    <p>Matched</p>
+                </div>
+                {% if not_found %}
+                <div class="stat-item">
+                    <h3 style="color: #ff5555;">{{ not_found|length }}</h3>
+                    <p>Missing</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="search-container">
+                <form id="search-form" autocomplete="off">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-query" class="search-input"
+                        placeholder="Search for any song or artist manually...">
+                </form>
+                <div id="search-results"
+                    style="display: none; margin-top: 1rem; background: #181818; border-radius: 12px; padding: 1rem; max-height: 400px; overflow-y: auto;">
+                </div>
+            </div>
+
+            {% if songs %}
+            <button id="addAllBtn" class="btn btn-primary w-100" onclick="addAllSongs()"
+                style="margin-bottom: 2rem; padding: 18px;">
+                <i class="fas fa-plus-circle" style="margin-right: 8px;"></i> Add All to Playlist
+            </button>
+
+            <ul class="song-list">
+                {% for song in songs %}
+                <li class="song-item">
+                    {% if song.image %}
+                    <img src="{{ song.image }}" class="song-image" alt="Album cover">
+                    {% else %}
+                    <div class="song-image" style="display: flex; align-items: center; justify-content: center;"><i
+                            class="fas fa-music"></i></div>
+                    {% endif %}
+
+                    <div class="song-info">
+                        <div class="song-name">{{ song.name }}</div>
+                        <div class="song-artist">{{ song.artist }}</div>
+                    </div>
+
+                    <div class="song-actions">
+                        {% if song.preview_url %}
+                        <button class="btn btn-outline btn-sm" onclick="playPreview('{{ song.preview_url }}', this)"
+                            title="Preview">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        {% else %}
+                        <button class="btn btn-outline btn-sm" disabled style="opacity: 0.3; cursor: not-allowed;"
+                            title="No preview">
+                            <i class="fas fa-play-slash"></i>
+                        </button>
+                        {% endif %}
+
+                        <button class="btn btn-primary btn-sm add-btn"
+                            onclick="addSong('{{ song.uri }}', '{{ song.name }}', this)">
+                            Add
+                        </button>
+                    </div>
+                </li>
+                {% endfor %}
             </ul>
-        </div>
-        {% endif %}
+            {% else %}
+            <div class="text-center" style="padding: 3rem 0;">
+                <i class="fas fa-search" style="font-size: 3rem; color: #333; margin-bottom: 1rem;"></i>
+                <p class="subtitle">No songs were successfully matched on Spotify.</p>
+            </div>
+            {% endif %}
 
-        <hr>
-        <a href="/">Upload another image</a>
+            {% if not_found %}
+            <div style="margin-top: 3rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+                <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #b3b3b3;">
+                    <i class="fas fa-exclamation-circle"></i> Could not find these songs:
+                </h3>
+                <div style="background: rgba(255,0,0,0.05); border-radius: 12px; padding: 1rem;">
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        {% for song, artist in not_found %}
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: #b3b3b3;">
+                            <span style="color: #fff; font-weight: 500;">{{ song }}</span>
+                            {% if artist %} <span style="opacity: 0.7;">- {{ artist }}</span>{% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
     </div>
-    <audio id="preview-player" style="display:none;"></audio>
 </body>
+
 </html>

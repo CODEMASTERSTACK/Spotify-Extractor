@@ -41,6 +41,8 @@
 
 **Spotify Playlist Extractor** is a powerful Flask web application that leverages Optical Character Recognition (OCR) to extract song titles and artist names from screenshots of Spotify playlists. It automatically searches for these songs on Spotify and creates a playlist for you—no manual typing required!
 
+Now featuring a **stunning dark mode UI** inspired by Spotify's own design, making the experience seamless and beautiful.
+
 Perfect for:
 - 📱 Transferring playlists from screenshots
 - 🎧 Recreating playlists shared as images
@@ -75,11 +77,11 @@ Perfect for:
 <tr>
 <td>
 
-### 📤 Batch Processing
-- Upload up to 10 screenshots
-- Duplicate detection
-- Progress tracking
-- Error handling
+### 🎨 Modern UI/UX
+- **New!** Spotify-inspired Dark Mode
+- Glassmorphism effects
+- Drag & Drop file upload
+- Responsive design for mobile & desktop
 
 </td>
 <td>
@@ -140,7 +142,7 @@ Before you begin, ensure you have the following installed:
 
 1. Download the installer from [GitHub](https://github.com/UB-Mannheim/tesseract/wiki)
 2. Run the installer (default path: `C:\Program Files\Tesseract-OCR`)
-3. Add Tesseract to your PATH or update the path in `app.py`
+3. Add Tesseract to your PATH or update the path in `.env`
 
 </details>
 
@@ -195,6 +197,7 @@ Flask>=2.0.0
 Pillow>=9.0.0
 pytesseract>=0.3.10
 spotipy>=2.23.0
+python-dotenv>=0.19.0
 ```
 
 ---
@@ -212,56 +215,31 @@ spotipy>=2.23.0
 4. Accept terms and click **"Create"**
 5. Note your **Client ID** and **Client Secret**
 
-### 2. Set Up ngrok (Development)
+### 2. Set Up Environment Variables
 
-```bash
-# Start ngrok tunnel
-ngrok http 5000
-
-# Copy the HTTPS URL (e.g., https://abcd1234.ngrok.io)
-```
-
-### 3. Configure Application
-
-Create a `.env` file in the project root:
+Create a `.env` file in the project root (you can copy `.env.example` if available):
 
 ```env
+# Spotify Configuration
 SPOTIPY_CLIENT_ID=your_client_id_here
 SPOTIPY_CLIENT_SECRET=your_client_secret_here
-SPOTIPY_REDIRECT_URI=https://your-ngrok-url.ngrok.io/callback
-FLASK_SECRET_KEY=your_secure_random_key
+SPOTIPY_REDIRECT_URI=http://localhost:5000/callback
+
+# Flask Configuration
+FLASK_SECRET_KEY=generate_a_strong_random_key_here
+
+# Optional: Tesseract Path (if not in PATH)
+# TESSERACT_CMD=C:\Program Files\Tesseract-OCR\tesseract.exe
 ```
 
-Update `app.py` to use environment variables:
+### 3. Set Up ngrok (Optional for Dev)
 
-```python
-import os
-from dotenv import load_dotenv
+If you want to test with a public URL:
 
-load_dotenv()
-
-SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
-SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
-SPOTIPY_REDIRECT_URI = os.getenv('SPOTIPY_REDIRECT_URI')
-app.secret_key = os.getenv('FLASK_SECRET_KEY')
+```bash
+ngrok http 5000
 ```
-
-**Add to requirements.txt:**
-```txt
-python-dotenv>=0.19.0
-```
-
-### 4. Update Tesseract Path (Windows Only)
-
-If Tesseract is not in your PATH, update the path in `app.py`:
-
-```python
-# Windows
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
-# macOS/Linux (usually auto-detected)
-# No change needed
-```
+Update `SPOTIPY_REDIRECT_URI` in your `.env` with the ngrok URL.
 
 ---
 
@@ -290,9 +268,9 @@ The application will be available at `http://localhost:5000`
 
 #### 2️⃣ **Upload Screenshots**
 
-- Click **"Choose Files"** or drag and drop
+- Drag and drop your screenshots into the upload zone
 - Select up to 10 images (PNG, JPG, JPEG)
-- Click **"Upload and Extract"**
+- Click **"Extract Songs"**
 
 **Tips for Best Results:**
 - Use high-resolution screenshots
@@ -309,7 +287,7 @@ The application will be available at `http://localhost:5000`
 #### 4️⃣ **Create Playlist**
 
 - Click **"Add All to Playlist"** to create a new playlist
-- Or add songs individually with **"Add to Playlist"**
+- Or add songs individually with **"Add"** button
 - Preview songs with the play button (if available)
 
 #### 5️⃣ **Find Your Playlist**
@@ -332,38 +310,11 @@ The application will be available at `http://localhost:5000`
 - Content-Type: `multipart/form-data`
 - Body: `images` (file array, max 10 files)
 
-**Response:**
-```json
-{
-  "songs": [
-    {
-      "uri": "spotify:track:xxx",
-      "name": "Song Name",
-      "artist": "Artist Name",
-      "image": "https://...",
-      "id": "track_id",
-      "preview_url": "https://..."
-    }
-  ],
-  "not_found": [
-    ["Song Name", "Artist Name"]
-  ],
-  "total_extracted": 15
-}
-```
-
 #### `GET /login`
 **Initiate Spotify OAuth flow**
 
-**Response:** Redirects to Spotify authorization page
-
 #### `GET /callback`
 **Spotify OAuth callback**
-
-**Query Parameters:**
-- `code`: Authorization code from Spotify
-
-**Response:** Redirects to home page with authenticated session
 
 #### `POST /add_song`
 **Add individual song to playlist**
@@ -371,29 +322,12 @@ The application will be available at `http://localhost:5000`
 **Request:**
 ```json
 {
-  "track_uri": "spotify:track:xxx",
-  "track_name": "Song Name"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Added Song Name to playlist"
+  "track_uri": "spotify:track:xxx"
 }
 ```
 
 #### `POST /add_all`
 **Add all songs to playlist**
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Added 15 songs to playlist"
-}
-```
 
 #### `POST /search_songs`
 **Manual search for songs**
@@ -402,14 +336,6 @@ The application will be available at `http://localhost:5000`
 ```json
 {
   "query": "search term"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "songs": [...]
 }
 ```
 
@@ -422,28 +348,20 @@ spotify-playlist-extractor/
 │
 ├── 📄 app.py                    # Main Flask application
 ├── 📄 requirements.txt          # Python dependencies
-├── 📄 .env.example             # Environment variables template
+├── 📄 .env                      # Environment variables (create this!)
 ├── 📄 .gitignore               # Git ignore rules
 ├── 📄 README.md                # This file
 │
 ├── 📁 templates/
-│   ├── 📄 base.html            # Base template
-│   ├── 📄 upload.html          # Upload page
+│   ├── 📄 upload.html          # Upload page (Drag & Drop)
 │   └── 📄 songs.html           # Songs review page
 │
 ├── 📁 static/
 │   ├── 📁 css/
-│   │   └── 📄 style.css        # Stylesheets
-│   ├── 📁 js/
-│   │   └── 📄 script.js        # JavaScript
+│   │   └── 📄 style.css        # New Dark Theme Styles
 │   └── 📁 images/
-│       └── 📄 logo.png         # Assets
 │
-├── 📁 uploads/                  # Temporary upload directory
-│
-└── 📁 tests/                    # Unit tests
-    ├── 📄 test_ocr.py
-    └── 📄 test_spotify.py
+└── 📁 uploads/                  # Temporary upload directory
 ```
 
 ---
@@ -455,19 +373,16 @@ spotify-playlist-extractor/
 - **Pytesseract** - OCR wrapper for Tesseract
 - **Pillow (PIL)** - Image processing
 - **Spotipy** - Spotify API wrapper
+- **Python-Dotenv** - Configuration management
+
+### Frontend
+- **HTML5/CSS3** - Modern semantic markup
+- **Glassmorphism** - Premium UI design
+- **JavaScript** - Interactive elements
 
 ### OCR & Image Processing
 - **Tesseract OCR** - Text recognition engine
 - **PIL ImageEnhance** - Contrast & sharpness enhancement
-- **PIL ImageFilter** - Noise reduction
-
-### Authentication
-- **Spotify OAuth 2.0** - Secure user authentication
-- **Flask Sessions** - Session management
-
-### Tools & Services
-- **ngrok** - Local tunnel for OAuth redirect
-- **Spotify Web API** - Music data and playlist management
 
 ---
 
@@ -482,11 +397,10 @@ spotify-playlist-extractor/
 
 **Solution:**
 1. Verify Tesseract is installed: `tesseract --version`
-2. Update the path in `app.py`:
-   ```python
-   pytesseract.pytesseract.tesseract_cmd = r'/path/to/tesseract'
+2. Update `TESSERACT_CMD` in your `.env` file:
+   ```env
+   TESSERACT_CMD=C:\Program Files\Tesseract-OCR\tesseract.exe
    ```
-3. Add Tesseract to system PATH
 
 </details>
 
@@ -498,48 +412,7 @@ spotify-playlist-extractor/
 **Solution:**
 1. Verify Client ID and Secret in `.env`
 2. Check redirect URI matches exactly in Spotify Dashboard
-3. Ensure ngrok is running and URL is up-to-date
-4. Clear browser cookies and try again
-
-</details>
-
-<details>
-<summary><b>❌ Songs not detected correctly</b></summary>
-
-**Problem:** OCR extracts wrong or incomplete text
-
-**Solution:**
-1. Use higher resolution screenshots (1080p+)
-2. Crop images to show only playlist area
-3. Ensure good contrast and lighting
-4. Try screenshots from desktop version (clearer text)
-5. Manually search for missing songs
-
-</details>
-
-<details>
-<summary><b>❌ Songs not found on Spotify</b></summary>
-
-**Problem:** Valid songs show in "Not Found" section
-
-**Solution:**
-1. Check if song is available in your region
-2. Try manual search with corrected spelling
-3. Verify song exists on Spotify
-4. Check for special characters in song name
-
-</details>
-
-<details>
-<summary><b>❌ Upload fails or times out</b></summary>
-
-**Problem:** Large images fail to upload
-
-**Solution:**
-1. Reduce image file size (compress or resize)
-2. Upload fewer images at once (max 10)
-3. Check internet connection
-4. Increase Flask timeout in production
+3. Ensure ngrok is running and URL is up-to-date (if using ngrok)
 
 </details>
 
@@ -549,54 +422,11 @@ spotify-playlist-extractor/
 
 Contributions are welcome! Please follow these guidelines:
 
-### How to Contribute
-
 1. **Fork the repository**
 2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
 3. **Commit your changes**
-   ```bash
-   git commit -m 'Add some AmazingFeature'
-   ```
 4. **Push to the branch**
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
 5. **Open a Pull Request**
-
-### Development Setup
-
-```bash
-# Install development dependencies
-pip install -r requirements-dev.txt
-
-# Run tests
-python -m pytest tests/
-
-# Run linter
-flake8 app.py
-
-# Format code
-black app.py
-```
-
-### Code Style
-
-- Follow PEP 8 guidelines
-- Add docstrings to functions
-- Include type hints where applicable
-- Write unit tests for new features
-
-### Reporting Issues
-
-Please use the [Issue Tracker](https://github.com/CODEMASTERSTACK/Spotify-Extractor/issues) and include:
-- Detailed description of the issue
-- Steps to reproduce
-- Expected vs actual behavior
-- Screenshots if applicable
-- System information (OS, Python version, etc.)
 
 ---
 
@@ -604,7 +434,6 @@ Please use the [Issue Tracker](https://github.com/CODEMASTERSTACK/Spotify-Extrac
 
 ### Version 1.1 (Planned)
 - [ ] Support for Apple Music screenshots
-- [ ] Dark mode theme
 - [ ] Playlist editing features
 - [ ] Export to CSV/JSON
 
@@ -612,44 +441,19 @@ Please use the [Issue Tracker](https://github.com/CODEMASTERSTACK/Spotify-Extrac
 - [ ] Desktop application (Electron)
 - [ ] Mobile app (React Native)
 - [ ] Collaborative playlist creation
-- [ ] AI-powered song recommendations
-- [ ] Support for YouTube Music, Deezer
 
 ### Completed
 - [x] Multiple image upload
 - [x] Advanced OCR processing
 - [x] Spotify integration
-- [x] Manual search fallback
+- [x] Dark mode theme (UI Overhaul)
+- [x] Environment variable configuration
 
 ---
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-```
-MIT License
-
-Copyright (c) 2024 [Your Name]
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
 
 ---
 
@@ -658,13 +462,12 @@ SOFTWARE.
 - **[Tesseract OCR](https://github.com/tesseract-ocr/tesseract)** - Open source OCR engine
 - **[Spotipy](https://spotipy.readthedocs.io/)** - Lightweight Python library for Spotify Web API
 - **[Flask](https://flask.palletsprojects.com/)** - Micro web framework
-- **[Pillow](https://python-pillow.org/)** - Python Imaging Library
-- **[ngrok](https://ngrok.com/)** - Secure tunneling solution
+
 ---
 
 ## 📞 Contact
 
-**Kripal SIngh**
+**Kripal Singh**
 - GitHub: [@CODEMASTERSTACK](https://github.com/CODEMASTERSTACK)
 - Email: leosen.krish@gmail.com
 
