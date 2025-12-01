@@ -1,6 +1,6 @@
 <div align="center">
 
-!(https://i.ibb.co/VWYwvqHG/Spotify-Extortor-Logo.png) 
+![logo](https://i.ibb.co/jN6TNqY/Spotify-Extractor-Logo.png) 
 # Spotify Playlist Extractor
 
 ### Extract songs from screenshots and create Spotify playlists automatically
